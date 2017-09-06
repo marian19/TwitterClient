@@ -1,0 +1,18 @@
+PODS:
+  - SVProgressHUD (2.1.2)
+  - TwitterCore (3.0.0)
+  - TwitterKit (3.1.0):
+    - TwitterCore (>= 3.0.0)
+
+DEPENDENCIES:
+  - SVProgressHUD
+  - TwitterKit
+
+SPEC CHECKSUMS:
+  SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
+  TwitterCore: 8ce250be1eb34633a0e6acc89520d4165ec52c10
+  TwitterKit: 21d0b22d67cb9a568cd8053972d0da7df2e0e9a0
+
+PODFILE CHECKSUM: 5842756d75681489d34165a728d7560f9b685e29
+
+COCOAPODS: 1.3.1
