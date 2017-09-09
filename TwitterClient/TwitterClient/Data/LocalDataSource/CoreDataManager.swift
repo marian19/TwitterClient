@@ -1,8 +1,8 @@
 //
 //  CoreDataManager.swift
-//  MedicineReminder
+//  TwitterClient
 //
-//  Created by Marian on 6/23/17.
+//  Created by Marian on 9/9/17.
 //  Copyright © 2017 Marian. All rights reserved.
 //
 
