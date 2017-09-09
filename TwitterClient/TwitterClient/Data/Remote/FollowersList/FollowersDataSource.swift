@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 
-struct FollowersData {
+struct FollowersDataSource {
     
     func getFollowersListFor(userID: String,pageNumber: Int ,compilationHandler:@escaping (_ list: [Follower], _ nextPageNumber:Int,_ error:Error?) -> Void){
         
@@ -20,6 +20,7 @@ struct FollowersData {
                                           DataConstants.Parameters.count: DataConstants.perPage,
                                           DataConstants.Parameters.cursor: pageNumber
         ]
+        
         var headers: [String:String] = [:]
         
         if UserDefaults.standard.object(forKey: Constants.accessToken) != nil {
@@ -32,6 +33,7 @@ struct FollowersData {
                 ]
             }
         }
+        
         AlamofireClient.sharedInstance.executeGetRequest(url: url, parameters: parameters, header: headers) { (responseData, error) in
             if error == nil{
                 let json =  JSON(responseData ?? "error")
@@ -46,14 +48,8 @@ struct FollowersData {
                     compilationHandler(followers,nextPage,error)
                 }else{
                     compilationHandler(followers,0,error)
-                    
                 }
-                
             }
-            
-            
         }
-        
     }
-    
 }

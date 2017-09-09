@@ -11,7 +11,7 @@ import Foundation
 class FollowerPresenter: BasePresenter,FollowersPresenterProtocol{
     
     weak var view: FollowersViewProtocol?
-    let followersData = FollowersData()
+    let followersDataSource = FollowersDataSource()
     let authentication = Authentication()
     var pageIndex = -1
     
@@ -19,7 +19,10 @@ class FollowerPresenter: BasePresenter,FollowersPresenterProtocol{
         self.view = view
     }
     
+    // MARK: -  FollowersPresenterProtocol implementation
+    
     func getFollowersNextPage(){
+        
         if Connectivity.isConnectedToInternet {
             view?.showProgressBar()
             getFollowersData()
@@ -34,35 +37,32 @@ class FollowerPresenter: BasePresenter,FollowersPresenterProtocol{
         if UserDefaults.standard.object(forKey: Constants.accessToken) == nil {
             getAuthenticationToken()
         }else{
-            
             if UserDefaults.standard.object(forKey: Constants.userID) != nil {
                 if Connectivity.isConnectedToInternet {
                     view?.showProgressBar()
                     Follower.deleteAllFollowers()
                     getFollowersData()
                 }else{
-                    
                     view?.setFollowers(followers: Follower.getAllFollowers())
-                    
                 }
-                
             }else{
                 view?.showLoginButton()
             }
-            
         }
     }
     
     func saveUserData(userID: String){
+        
         UserDefaults.standard.set(userID, forKey: Constants.userID)
         getFollowers()
-        
     }
+    
+    // MARK: -  private instanse methods
     
     private func getFollowersData(){
         let userID = UserDefaults.standard.string(forKey: Constants.userID)!
         
-        followersData.getFollowersListFor(userID: userID, pageNumber: pageIndex, compilationHandler: {(followers, pageIndex, error) in
+        followersDataSource.getFollowersListFor(userID: userID, pageNumber: pageIndex, compilationHandler: {(followers, pageIndex, error) in
             
             self.view!.hideProgressBar()
             if error == nil{

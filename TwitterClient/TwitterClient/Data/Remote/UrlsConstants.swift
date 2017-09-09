@@ -15,7 +15,9 @@ struct UrlsConstants {
     struct Follwers {
         static let followersListURL = "1.1/followers/list.json"
     }
-    
+    struct Timeline {
+        static let timelineURL = "1.1/statuses/user_timeline.json"
+    }
 
     struct OAuth {
         static let OAuthUrl = "oauth2/token"

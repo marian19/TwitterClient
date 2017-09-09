@@ -1,10 +1,11 @@
 //
 //  Colors.swift
-//  Yalllo
+//  TwitterClient
 //
-//  Created by Marian on 7/22/17.
+//  Created by Marian on 9/9/17.
 //  Copyright © 2017 Marian. All rights reserved.
 //
+
 
 import Foundation
 import UIKit

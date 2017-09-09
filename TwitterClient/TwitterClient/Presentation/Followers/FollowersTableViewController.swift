@@ -8,49 +8,61 @@
 
 import UIKit
 import SDWebImage
+import DZNEmptyDataSet
 
 class FollowersTableViewController: BaseViewController {
     
+    // MARK: -  @IBOutlet
+
     @IBOutlet weak var tableView: UITableView!
+    
+    // MARK: -  instance variable
+
     var followers :[Follower] = [Follower]()
     var loginButton: TWTRLogInButton?
     var presenter: FollowersPresenterProtocol?
     
     lazy var refreshControl: UIRefreshControl = {
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action:
             #selector(self.handleRefresh(_:)),
                                  for: UIControlEvents.valueChanged)
         refreshControl.tintColor = Colors.mainColor
-        
         return refreshControl
     }()
     
+    // MARK: -  selector
+
     func handleRefresh(_ refreshControl: UIRefreshControl) {
+         followers = [Follower]()
         presenter?.getFollowers()
         
     }
+    
+    // MARK: -  view lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.tableFooterView = UIView()
         self.tableView.addSubview(self.refreshControl)
-        
+        self.title = "Followers".localized
         presenter = FollowerPresenter(view: self)
         presenter?.getFollowers()
     }
     
-    
-    /*
      // MARK: - Navigation
      
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+        
+        let row = self.tableView.indexPathForSelectedRow?.row
+        let profileViewController = segue.destination as! ProfileViewController
+        profileViewController.follower = followers[row!]
+    }
 }
+
+// MARK: -  FollowersViewProtocol implementation
+
 extension FollowersTableViewController: FollowersViewProtocol{
     
     func showLoginButton(){
@@ -80,29 +92,28 @@ extension FollowersTableViewController: FollowersViewProtocol{
             if self.followers.count == 0{
                 self.followers = followers
                 self.tableView.reloadData()
-                
             }
-            
         }
     }
    
-    
     func showErrorMsg(message: String){
         refreshControl.endRefreshing()
-        
         alert(message: message)
     }
+    
     func showProgressBar(){
         self.showProgressView()
         
     }
+    
     func hideProgressBar(){
         self.dismissProgressView()
     }
 }
 
-extension FollowersTableViewController: UITableViewDelegate,UITableViewDataSource{
-    
+// MARK: -  UITableViewDataSource implementation
+
+extension FollowersTableViewController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -125,6 +136,7 @@ extension FollowersTableViewController: UITableViewDelegate,UITableViewDataSourc
         }
         cell.updateConstraintsIfNeeded()
         
+        // get followers next page if connected to internet
         if Connectivity.isConnectedToInternet {
             if indexPath.row == followers.count - 1 { // last cell
                 presenter?.getFollowers()
@@ -132,6 +144,17 @@ extension FollowersTableViewController: UITableViewDelegate,UITableViewDataSourc
         }
         
         return cell
+    }
+}
+
+// MARK: -  DZNEmptyDataSetSource implementation
+
+extension FollowersTableViewController: DZNEmptyDataSetSource{
+    
+    func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+        let string = "NoFollower".localized
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
+        return NSAttributedString(string: string, attributes: attrs)
     }
 }
 

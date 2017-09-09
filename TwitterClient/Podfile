@@ -12,6 +12,7 @@ target 'TwitterClient' do
     pod 'Alamofire'
     pod 'SDWebImage'
     pod 'AlamofireImage'
+    pod 'DZNEmptyDataSet'
 
     target 'TwitterClientTests' do
         inherit! :search_paths

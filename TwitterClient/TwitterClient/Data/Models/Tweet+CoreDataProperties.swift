@@ -15,9 +15,9 @@ extension Tweet {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Tweet> {
         return NSFetchRequest<Tweet>(entityName: "Tweet")
     }
-
-    @NSManaged public var favoriteCount: Int32
-    @NSManaged public var retweetCount: Int32
+    @NSManaged public var id: String?
+    @NSManaged public var favoriteCount: String
+    @NSManaged public var retweetCount: String
     @NSManaged public var text: String?
     @NSManaged public var user: Follower?
 
