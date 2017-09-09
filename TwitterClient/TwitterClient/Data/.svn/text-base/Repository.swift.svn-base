@@ -1,0 +1,14 @@
+//
+//  Repository.swift
+//  SPOC
+//
+//  Created by Marian on 7/31/17.
+//  Copyright © 2017 avc. All rights reserved.
+//
+
+import Foundation
+
+protocol Repository {
+    
+    func getData(requestValue: RequestValues, compilationHandler:@escaping (ResponseValues?,Error?) -> Void)
+}

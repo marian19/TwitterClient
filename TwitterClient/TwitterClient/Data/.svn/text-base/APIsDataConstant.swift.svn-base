@@ -1,0 +1,45 @@
+//
+//  APIsKeysConstant.swift
+//  Yalllo
+//
+//  Created by Marian on 8/17/17.
+//  Copyright © 2017 Marian. All rights reserved.
+//
+
+import Foundation
+
+struct DataConstants {
+    
+    struct UserData {
+        static let email = "email"
+        static let firstName = "firstName"
+        static let lastName = "lastName"
+        static let middleName = "middleName"
+        static let dateOfBirth = "dateOfBirth"
+        static let contactNumber = "contactNumber"
+        static let token = "token"
+        static let userName = "userName"
+        static let fbId = "fbId"
+        static let fbToken = "fbToken"
+        static let mobileNumber = "MobileNumber"
+        static let channelName = "channelName"
+        static let deviceType = "deviceType"
+        static let os = "os"
+        static let appVersion = "appVersion"
+        static let deviceIdentifier = "deviceIdentifier"
+        static let password = "password"
+        
+        // constant value in the api request body
+        static let osValue = "iOS"
+        static let channelNameValue = "Mobile"
+        
+    }
+    
+    struct CountryData {
+        static let id = "id"
+        static let codeCode = "codeCode"
+        static let countryName = "countryName"
+    }
+
+    
+}

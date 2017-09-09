@@ -1,0 +1,55 @@
+//
+//  BaseViewController.swift
+//  SPOC
+//
+//  Created by avc on 2017-07-18.
+//  Copyright © 2017 avc. All rights reserved.
+//
+
+import UIKit
+import MBProgressHUD
+
+class BaseViewController: UIViewController {
+    
+    func alert(message: String, title: String = "") {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
+        
+    }
+    
+    func showGlobalProgressHUDWithTitle(view:UIView!,title: String?) -> MBProgressHUD{
+        
+        let hud = MBProgressHUD.showAdded(to: view, animated: true)
+        
+        
+        if title == nil{
+            hud.label.text = NSLocalizedString("Loading", comment: "Loading")
+        }else{
+            hud.label.text = title!
+        }
+        return hud
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupNavigationBar()
+    }
+    
+    // Mark:- Navigation bar Functions
+    func setupNavigationBar()
+    {
+        self.navigationItem.setHidesBackButton(true, animated:true);
+        let backButton = UIBarButtonItem(image: UIImage(named:"back"),
+                                         style: UIBarButtonItemStyle.plain ,
+                                         target: self, action:#selector(backTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    // MARK: - IBActions
+    func backTapped(button: UIButton)
+    {
+        let _ = self.navigationController?.popViewController(animated: true)
+    }
+}

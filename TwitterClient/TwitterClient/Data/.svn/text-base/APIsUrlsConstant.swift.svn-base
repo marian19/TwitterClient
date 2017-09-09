@@ -1,0 +1,32 @@
+//
+//  APIs.swift
+//  Yalllo
+//
+//  Created by Marian on 8/16/17.
+//  Copyright © 2017 Marian. All rights reserved.
+//
+
+import Foundation
+
+struct Constants {
+    
+    static let baseURL = "http://192.168.10.179:8085/api/v1/"
+    
+    
+    
+    struct RegistrationAPIs {
+        static let signup = "verification/signup"
+        static let contryCode = "countryCode/getAll"
+    }
+    
+    
+    
+    struct LoginAPIs {
+        static let login = "verification/login"
+        static let loginByFB = "verification/loginByFB"
+        static let forgetPassword = "verification/forgetPassword"
+        static let logout = "verification/logout"
+    }
+    
+    
+}
