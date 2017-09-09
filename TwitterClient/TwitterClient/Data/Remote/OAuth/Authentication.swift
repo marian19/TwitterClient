@@ -14,8 +14,8 @@ struct Authentication {
     
     func getAccessToken(compilationHandler:@escaping (_ accessToken: String?,_ error:Error?) -> Void){
         let url = UrlsConstants.baseURL + UrlsConstants.OAuth.OAuthUrl
-
- 
+        
+        
         let credential: String = "\(Constants.consumerKey):\(Constants.consumerSecret)".base64Encoded()!
         
         let headers: [String:String] = ["Authorization":"Basic \(credential)",
@@ -24,11 +24,16 @@ struct Authentication {
         
         
         let parameters: [String : Any] = ["grant_type":"client_credentials"]
-
+        
         AlamofireClient.sharedInstance.executePostRequest(url: url, parameters: parameters, header: headers) { (responseData, error) in
             if error == nil{
-                let json =  JSON(responseData)
-                compilationHandler("bearer \(json["access_token"].stringValue)",error)
+                let json =  JSON(responseData ?? "error")
+                if let token = json["access_token"].string{
+                    compilationHandler("bearer \(token)",error)
+                    
+                }else{
+                    compilationHandler(nil,error)
+                }
                 
             }
             

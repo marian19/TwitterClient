@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  TwitterClient
+ 
+   Created by Marian on 9/9/17.
+   Copyright © 2017 Marian. All rights reserved.
+*/
+
+"emptyMessage" = "You don't have followers";
+"ConnectionError" = "Connection error";
+"OfflineMessage" = "The internet connection appears to be offline";
+"Loading" = "Loading";

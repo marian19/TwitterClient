@@ -1,27 +1,106 @@
 //
-//  Follower.swift
-//  TwitterClient
+//  Follower+CoreDataClass.swift
 //
-//  Created by Marian on 9/7/17.
-//  Copyright © 2017 Marian. All rights reserved.
+//
+//  Created by Marian on 9/9/17.
+//
 //
 
 import Foundation
+import CoreData
 import SwiftyJSON
+import Alamofire
+import AlamofireImage
 
-struct Follower {
+@objc(Follower)
+public class Follower: NSManagedObject {
     
-    let id: Int
-    let name: String
-    let description: String
-    let backgroundImageURL: String
-    let profileImageURL: String
-
-    init(json: JSON) {
-        id = json[DataConstants.FollwersData.id].intValue
-        name = json[DataConstants.FollwersData.name].stringValue
-        description = json[DataConstants.FollwersData.description].stringValue
-        backgroundImageURL = json[DataConstants.FollwersData.backgroundImageURL].stringValue
-        profileImageURL = json[DataConstants.FollwersData.profileImageURL].stringValue
+    static func deleteAllFollowers()  {
+        let context = CoreDataManager.sharedInstance.managedObjectContext
+        
+        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Follower")
+        let request = NSBatchDeleteRequest(fetchRequest: fetch)
+        do {
+            _ = try context.execute(request)
+        } catch {
+            print("delete error")
+        }
     }
+    
+    
+    static func addFollower(json: JSON) -> Follower? {
+        
+        let context = CoreDataManager.sharedInstance.managedObjectContext
+        if let follower = NSEntityDescription.insertNewObject(forEntityName: "Follower", into: context) as? Follower {
+            follower.id = json[DataConstants.FollwersData.id].stringValue
+            follower.name = json[DataConstants.FollwersData.name].stringValue
+            follower.bio = json[DataConstants.FollwersData.description].stringValue
+            let backgroundImageURL = json[DataConstants.FollwersData.backgroundImageURL].stringValue
+            
+            let  profileImageURL = json[DataConstants.FollwersData.profileImageURL].stringValue
+            follower.backgroundImageURL = backgroundImageURL
+            follower.profileImageURL = profileImageURL
+            
+            Alamofire.request(profileImageURL).responseImage { response in
+                if let image = response.result.value {
+                    follower.profileImage = UIImagePNGRepresentation(image) as NSData?
+                    Alamofire.request(backgroundImageURL).responseImage { response in
+                        if let image = response.result.value {
+                            follower.backgroundImage = UIImagePNGRepresentation(image) as NSData?
+                            do {
+                                try context.save()
+                                print("Saaaaavvvveeeddd")
+                                
+                                
+                            } catch let error as NSError {
+                                print("Could not save. \(error), \(error.userInfo)")
+                            }
+                        }else{
+                            do {
+                                try context.save()
+                                print("Saaaaavvvveeeddd")
+                                
+                                
+                            } catch let error as NSError {
+                                print("Could not save. \(error), \(error.userInfo)")
+                            }
+                        }
+                    }
+                }else{
+                    do {
+                        try context.save()
+                        print("Saaaaavvvveeeddd")
+                        
+                        
+                    } catch let error as NSError {
+                        print("Could not save. \(error), \(error.userInfo)")
+                    }
+                }
+            }
+            return follower
+            
+        }
+        return nil
+    }
+    
+    static func getAllFollowers() -> [Follower]{
+        
+        var followers  = [Follower]()
+        
+        let context = CoreDataManager.sharedInstance.managedObjectContext
+        
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Follower")
+        do {
+            
+            try
+                followers = context.fetch(fetchRequest) as! [Follower]
+        } catch {
+            let nserror = error as NSError
+            print("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+        
+        return followers
+    }
+    
 }

@@ -17,7 +17,7 @@ class BaseViewController: UIViewController {
     
     func alert(message: String, title: String = "") {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let OKAction = UIAlertAction(title: "OK".localized, style: .default, handler: nil)
         alertController.addAction(OKAction)
         self.present(alertController, animated: true, completion: nil)
         
@@ -25,7 +25,7 @@ class BaseViewController: UIViewController {
     
     // Mark:- SVProgressHUD Functions
     
-    func showProgressView(WithTitle: String = NSLocalizedString("Loading", comment: "Loading")) {
+    func showProgressView(WithTitle: String = "Loading".localized) {
         SVProgressHUD.setDefaultStyle(.dark)
         SVProgressHUD.setDefaultAnimationType(.native)
         SVProgressHUD.show(withStatus: title)
