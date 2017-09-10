@@ -63,7 +63,7 @@ public class Tweet: NSManagedObject {
         tweet?.user = follower
         do {
             try context.save()
-            print("Saaaaavvvveeeddd")
+            print("Saved")
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }

@@ -71,7 +71,7 @@ public class Follower: NSManagedObject {
                         follower?.backgroundImage = UIImagePNGRepresentation(image) as NSData?
                         do {
                             try context.save()
-                            print("Saaaaavvvveeeddd")
+                            print("Saved")
                             
                         } catch let error as NSError {
                             print("Could not save. \(error), \(error.userInfo)")

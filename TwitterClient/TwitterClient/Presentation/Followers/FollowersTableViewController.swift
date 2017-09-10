@@ -68,8 +68,10 @@ extension FollowersTableViewController: FollowersViewProtocol{
     
     func showLoginButton(){
         tableView.isHidden = true
+        
         loginButton = TWTRLogInButton(logInCompletion: {[weak self] session, error in
-            if (session != nil) {
+            
+            if (session != nil) { // success login
                 
                 self?.loginButton?.removeFromSuperview()
                 self?.tableView.isHidden = false

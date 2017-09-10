@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension Follower {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Follower> {
