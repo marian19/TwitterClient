@@ -24,11 +24,9 @@ class FollowerPresenter: BasePresenter,FollowersPresenterProtocol{
     func getFollowersNextPage(){
         
         if Connectivity.isConnectedToInternet {
-            view?.showProgressBar()
-            getFollowersData()
-            
+            getFollowersData(pageIndex: self.pageIndex)
         }else{
-            view?.showErrorMsg(message: "OfflineMessage".localized)
+            self.view?.showErrorMsg(message: "OfflineMessage".localized)
         }
     }
     
@@ -39,11 +37,12 @@ class FollowerPresenter: BasePresenter,FollowersPresenterProtocol{
         }else{
             if UserDefaults.standard.object(forKey: Constants.userID) != nil {
                 if Connectivity.isConnectedToInternet {
-                    view?.showProgressBar()
                     Follower.deleteAllFollowers()
-                    getFollowersData()
+                    self.getFollowersData(pageIndex: -1)
+                    
                 }else{
-                    view?.setFollowers(followers: Follower.getAllFollowers())
+                    // get data from core data
+                    self.view?.setFollowers(followers: Follower.getAllFollowers())
                 }
             }else{
                 view?.showLoginButton()
@@ -57,12 +56,13 @@ class FollowerPresenter: BasePresenter,FollowersPresenterProtocol{
         getFollowers()
     }
     
-    // MARK: -  private instanse methods
+    // MARK: -   instanse methods
     
-    private func getFollowersData(){
+    func getFollowersData(pageIndex: Int){
         let userID = UserDefaults.standard.string(forKey: Constants.userID)!
         
-        followersDataSource.getFollowersListFor(userID: userID, pageNumber: pageIndex, compilationHandler: {(followers, pageIndex, error) in
+        self.view?.showProgressBar()
+        self.followersDataSource.getFollowersListFor(userID: userID, pageNumber: pageIndex, compilationHandler: {(followers, pageIndex, error) in
             
             self.view!.hideProgressBar()
             if error == nil{
@@ -74,18 +74,24 @@ class FollowerPresenter: BasePresenter,FollowersPresenterProtocol{
         })
     }
     
-    private func getAuthenticationToken(){
+    func getAuthenticationToken(){
+        
         if Connectivity.isConnectedToInternet {
-            view?.showProgressBar()
-            authentication.getAccessToken {(token, error) in
+            
+            self.view?.showProgressBar()
+            
+            self.authentication.getAccessToken {(token, error) in
                 if error == nil{
+                    
                     UserDefaults.standard.set(token!, forKey: Constants.accessToken)
+                    
                     self.view?.hideProgressBar()
+                    
                     self.getFollowers()
                 }
             }
         }else{
-            view?.showErrorMsg(message: "OfflineMessage".localized)
+            self.view?.showErrorMsg(message: "OfflineMessage".localized)
         }
     }
 }

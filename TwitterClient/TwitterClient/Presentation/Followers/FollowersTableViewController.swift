@@ -13,11 +13,11 @@ import DZNEmptyDataSet
 class FollowersTableViewController: BaseViewController {
     
     // MARK: -  @IBOutlet
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     // MARK: -  instance variable
-
+    
     var followers :[Follower] = [Follower]()
     var loginButton: TWTRLogInButton?
     var presenter: FollowersPresenterProtocol?
@@ -33,27 +33,28 @@ class FollowersTableViewController: BaseViewController {
     }()
     
     // MARK: -  selector
-
+    
     func handleRefresh(_ refreshControl: UIRefreshControl) {
-         followers = [Follower]()
+        followers = [Follower]()
         presenter?.getFollowers()
         
     }
     
     // MARK: -  view lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.tableFooterView = UIView()
         self.tableView.addSubview(self.refreshControl)
+        
         self.title = "Followers".localized
         presenter = FollowerPresenter(view: self)
         presenter?.getFollowers()
     }
     
-     // MARK: - Navigation
-     
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         let row = self.tableView.indexPathForSelectedRow?.row
         let profileViewController = segue.destination as! ProfileViewController
@@ -69,6 +70,7 @@ extension FollowersTableViewController: FollowersViewProtocol{
         tableView.isHidden = true
         loginButton = TWTRLogInButton(logInCompletion: {[weak self] session, error in
             if (session != nil) {
+                
                 self?.loginButton?.removeFromSuperview()
                 self?.tableView.isHidden = false
                 print("signed in as \(String(describing: session?.userName))");
@@ -95,10 +97,11 @@ extension FollowersTableViewController: FollowersViewProtocol{
             }
         }
     }
-   
+    
     func showErrorMsg(message: String){
-        refreshControl.endRefreshing()
         alert(message: message)
+        refreshControl.endRefreshing()
+        
     }
     
     func showProgressBar(){
@@ -139,7 +142,7 @@ extension FollowersTableViewController: UITableViewDataSource{
         // get followers next page if connected to internet
         if Connectivity.isConnectedToInternet {
             if indexPath.row == followers.count - 1 { // last cell
-                presenter?.getFollowers()
+                presenter?.getFollowersNextPage()
             }
         }
         
@@ -149,12 +152,20 @@ extension FollowersTableViewController: UITableViewDataSource{
 
 // MARK: -  DZNEmptyDataSetSource implementation
 
-extension FollowersTableViewController: DZNEmptyDataSetSource{
+extension FollowersTableViewController: DZNEmptyDataSetSource,DZNEmptyDataSetDelegate{
+    
     
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let string = "NoFollower".localized
         let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
         return NSAttributedString(string: string, attributes: attrs)
+    }
+    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
+        return true
+    }
+    
+    func emptyDataSetShouldAllowTouch(_ scrollView: UIScrollView!) -> Bool {
+        return true
     }
 }
 
